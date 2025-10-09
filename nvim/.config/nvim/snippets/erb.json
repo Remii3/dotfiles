@@ -1,0 +1,91 @@
+{
+  "ERB Output": {
+    "prefix": "=",
+    "body": "<%= ${1} %>"
+  },
+  "ERB Script": {
+    "prefix": "%",
+    "body": "<% ${1} %>"
+  },
+  "ERB Comment": {
+    "prefix": "#",
+    "body": "<%# ${1} %>"
+  },
+  "If Block": {
+    "prefix": "if",
+    "body": [
+      "<% if ${1} %>",
+      "  ${2}",
+      "<% end %>"
+    ]
+  },
+  "Else": {
+    "prefix": "else",
+    "body": [
+      "<% else %>",
+      "  ${1}"
+    ]
+  },
+  "If Else Block": {
+    "prefix": "ife",
+    "body": [
+      "<% if ${1} %>",
+      "  ${2}",
+      "<% else %>",
+      "  ${3}",
+      "<% end %>"
+    ]
+  },
+  "Each Loop": {
+    "prefix": "each",
+    "body": [
+      "<% ${1}.each do |${2:item}| %>",
+      "  ${3}",
+      "<% end %>"
+    ]
+  },
+  "Render Partial": {
+    "prefix": "render",
+    "body": "<%= render \"${1}\" %>"
+  },
+  "Link To": {
+    "prefix": "link",
+    "body": "<%= link_to \"${1:Text}\", ${2:path_or_url} %>"
+  },
+  "Button To": {
+    "prefix": "button",
+    "body": "<%= button_to \"${1:Text}\", ${2:path_or_url} %>"
+  },
+  "Image Tag": {
+    "prefix": "img",
+    "body": "<%= image_tag ${1:\"/path.png\"}${2:, alt: \"${3:Alt}\"} %>"
+  },
+  "Form With": {
+    "prefix": "formw",
+    "body": [
+      "<%= form_with model: ${1} do |f| %>",
+      "  <div>",
+      "    <%= f.submit \"${2:Save}\" %>",
+      "  </div>",
+      "<% end %>"
+    ]
+  },
+  "Turbo Frame": {
+    "prefix": "tf",
+    "body": [
+      "<turbo-frame id=\"${1}\">",
+      "  ${2}",
+      "</turbo-frame>"
+    ]
+  },
+  "Turbo Stream": {
+    "prefix": "ts",
+    "body": [
+      "<turbo-stream action=\"${1:update}\" target=\"${2:dom_id}\">",
+      "  <template>",
+      "    ${0}",
+      "  </template>",
+      "</turbo-stream>"
+    ]
+  }
+}

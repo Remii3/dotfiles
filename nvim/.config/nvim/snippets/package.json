@@ -1,0 +1,19 @@
+{
+  "name": "personal-snippets",
+  "contributes": {
+    "snippets": [
+      {
+        "language": "all",
+        "path": "./all.json"
+      },
+      {
+        "language": "ruby",
+        "path": "./ruby.json"
+      },
+      {
+        "language": "eruby",
+        "path": "./erb.json"
+      }
+    ]
+  }
+}

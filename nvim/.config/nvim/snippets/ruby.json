@@ -1,0 +1,62 @@
+{
+  "Def Method": {
+    "prefix": "def",
+    "body": [
+      "def ${1}",
+      "  ${2}",
+      "end"
+    ]
+  },
+  "Class": {
+    "prefix": "class",
+    "body": [
+      "class ${1}",
+      "  ${2}",
+      "end"
+    ]
+  },
+  "Module": {
+    "prefix": "mod",
+    "body": [
+      "module ${1}",
+      "  ${2}",
+      "end"
+    ]
+  },
+  "Each Do": {
+    "prefix": "each",
+    "body": [
+      "${1}.each do |${2}|",
+      "  ${3}",
+      "end"
+    ]
+  },
+  "Times Do": {
+    "prefix": "times",
+    "body": [
+      "${1}.times do",
+      "  ${2}",
+      "end"
+    ]
+  },
+  "Do End Block": {
+    "prefix": "do",
+    "body": [
+      "do",
+      "  ${1}",
+      "end"
+    ]
+  },
+  "If": {
+    "prefix": "if",
+    "body": [
+      "if ${1}",
+      "  ${2}",
+      "end"
+    ]
+  },
+  "Print Debug": {
+    "prefix": "pdbg",
+    "body": "puts \"DEBUG: ${1:msg}\""
+  }
+}
