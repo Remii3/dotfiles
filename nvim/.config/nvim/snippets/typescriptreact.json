@@ -1,0 +1,23 @@
+{
+  "React functional component": {
+    "prefix": "rfc",
+    "body": [
+      "import React from 'react';",
+      "",
+      "interface ${1:Props} {",
+      "  ${2:propName}?: ${3:string}",
+      "}",
+      "",
+      "const ${4:ComponentName}: React.FC<$1> = ({ ${2:propName} }) => {",
+      "  return (",
+      "    <div>",
+      "      ${5:Hello World}",
+      "    </div>",
+      "  );",
+      "};",
+      "",
+      "export default $4;"
+    ],
+    "description": "Tworzy podstawowy komponent funkcyjny React z typami"
+  }
+}

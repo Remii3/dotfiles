@@ -13,6 +13,7 @@ return {
       scss = { "prettier" },
       lua = { "stylua" },
       sh = { "shfmt" },
+      markdown = { "prettier" },
     },
   },
 }
