@@ -1,7 +1,7 @@
 return {
   "folke/noice.nvim",
-  opts = {
-    views = {
+  opts = function(_, opts)
+    opts.views = {
       cmdline_popup = {
         position = {
           row = "40%",
@@ -12,6 +12,6 @@ return {
           height = "auto",
         },
       },
-    },
-  },
+    }
+  end,
 }

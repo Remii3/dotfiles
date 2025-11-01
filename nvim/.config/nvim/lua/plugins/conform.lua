@@ -1,7 +1,7 @@
 return {
   "stevearc/conform.nvim",
-  opts = {
-    formatters_by_ft = {
+  opts = function(_, opts)
+    opts.formatters_by_ft = {
       yaml = { "yamlfmt" },
       typescript = { "prettier" },
       typescriptreact = { "prettier" },
@@ -14,6 +14,7 @@ return {
       lua = { "stylua" },
       sh = { "shfmt" },
       markdown = { "prettier" },
-    },
-  },
+      ["_"] = { "prettier" },
+    }
+  end,
 }
