@@ -14,7 +14,14 @@ return {
       lua = { "stylua" },
       sh = { "shfmt" },
       markdown = { "prettier" },
+      ruby = { "rubocop" },
+      eruby = { "erb-formatter" },
       ["_"] = { "prettier" },
+    }
+    opts.formatters["erb-formatter"] = {
+      command = "erb-format",
+      args = { "--stdin-filename", "$FILENAME" },
+      stdin = true,
     }
   end,
 }

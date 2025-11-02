@@ -4,3 +4,4 @@
 
 vim.opt.breakindent = true
 vim.opt.listchars = { tab = "› ", trail = "·", extends = "»", precedes = "«" }
+vim.opt.relativenumber = false
