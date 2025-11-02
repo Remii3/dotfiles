@@ -3,3 +3,6 @@
 -- Add any additional keymaps here
 
 vim.keymap.set("n", "<leader>z", "<cmd>NoNeckPain<CR>", { desc = "Toggle No neck pain" })
+vim.keymap.set("n", "<leader>;", function()
+  require("snacks").dashboard.open()
+end, opts)
