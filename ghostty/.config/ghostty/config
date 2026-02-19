@@ -1,0 +1,28 @@
+# Font
+font-family = CaskaydiaCove Nerd Font
+font-size = 16
+font-style = Medium
+
+# font-thicken
+font-thicken=true
+font-thicken-strength=200
+
+# Window
+window-padding-x = 12
+window-padding-y = 10
+window-decoration = auto
+window-padding-balance=true
+
+# Background
+background-blur = 200
+background-opacity = 0.95
+
+# Cursor
+cursor-style = block
+cursor-style-blink = false
+shell-integration-features = no-cursor
+
+# Behavior
+copy-on-select = false
+theme = Dark Modern
+maximize=true
