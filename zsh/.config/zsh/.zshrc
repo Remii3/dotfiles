@@ -1,4 +1,11 @@
-test -z "$TMUX" && (tmux attach || tmux new-session)
+# Homebrew path: macOS Apple Silicon or Linuxbrew
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
+BREW_PREFIX="$(brew --prefix 2>/dev/null)"
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -36,7 +43,7 @@ export EDITOR='nvim'
 
 alias n=nvim
 
-source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
+[[ -n "$BREW_PREFIX" ]] && source "$BREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -65,7 +72,7 @@ fi
 
 # Start tmux
 
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+[[ -n "$BREW_PREFIX" ]] && source "$BREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
 # This has to be at the end
-source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+[[ -n "$BREW_PREFIX" ]] && source "$BREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
