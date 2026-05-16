@@ -1,0 +1,14 @@
+
+brew list
+==> Formulae
+bat			freetype		krb5			libngtcp2		lpeg			node			python@3.14		supabase		z3
+brotli			fzf			lazygit			libpng			luajit			oniguruma		readline		tmux			zoxide
+c-ares			gettext			libevent		libssh2			luv			openssl@3		ripgrep			tree-sitter@0.25	zsh-autosuggestions
+ca-certificates		git			libgit2			libunistring		lz4			pcre2			rust			unibilium		zsh-syntax-highlighting
+eza			glow			libiconv		libuv			mpdecimal		pkgconf			simdjson		utf8proc		zstd
+fd			gmp			libnghttp2		libyaml			ncurses			postgresql@18		sqlite			uvwasi
+fontconfig		icu4c@78		libnghttp3		llvm			neovim			powerlevel10k		stow			xz
+
+==> Casks
+alacritty			font-caskaydia-mono-nerd-font	font-iosevka-nerd-font		font-meslo-lg-nerd-font		hammerspoon			openmtp
+betterdisplay			font-fira-code			font-maple-mono-nf		ghostty				obs				whisky
