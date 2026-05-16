@@ -10,6 +10,8 @@ fi
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
+source ~/dotfiles/zsh/.config/zsh/custom-web-search.zsh
+
 plugins=(git)
 DISABLE_AUTO_TITLE="true"
 source $ZSH/oh-my-zsh.sh
