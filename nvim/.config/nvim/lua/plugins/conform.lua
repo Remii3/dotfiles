@@ -9,6 +9,7 @@ return {
         javascriptreact = { "prettier" },
         css = { "prettier" },
         json = { "prettier" },
+        vue = { "prettier" },
       },
     },
   },

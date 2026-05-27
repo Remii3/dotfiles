@@ -1,7 +1,10 @@
 {
   "extras": [
-    "lazyvim.plugins.extras.ai.claudecode",
-    "lazyvim.plugins.extras.lang.ruby",
+    "lazyvim.plugins.extras.lang.json",
+    "lazyvim.plugins.extras.lang.markdown",
+    "lazyvim.plugins.extras.lang.typescript",
+    "lazyvim.plugins.extras.lang.typescript.vtsls",
+    "lazyvim.plugins.extras.lang.vue",
     "lazyvim.plugins.extras.util.dot",
     "lazyvim.plugins.extras.util.mini-hipatterns"
   ],

@@ -17,39 +17,35 @@ style = { shape = "Block", blinking = "Never" }
 [selection]
 save_to_clipboard = false
 
+# -----------------------------------------------------------------------------
+# TokyoNight Alacritty Colors
+# Theme: Tokyo Night Moon
+# Upstream: https://github.com/folke/tokyonight.nvim/raw/main/extras/alacritty/tokyonight_moon.toml
+# -----------------------------------------------------------------------------
+
+# Default colors
 [colors.primary]
-background = "#1f1f1f"
-foreground = "#cccccc"
+background = '#222436'
+foreground = '#c8d3f5'
 
-[colors.cursor]
-text = "#000000"
-cursor = "#ffffff"
-
-[colors.selection]
-text = "#e0e0e0"
-background = "#3a3d41"
-
+# Normal colors
 [colors.normal]
-black = "#272727"
-red = "#f74949"
-green = "#2ea043"
-yellow = "#9e6a03"
-blue = "#0078d4"
-magenta = "#d01273"
-cyan = "#1db4d6"
-white = "#cccccc"
+black = '#1b1d2b'
+red = '#ff757f'
+green = '#c3e88d'
+yellow = '#ffc777'
+blue = '#82aaff'
+magenta = '#c099ff'
+cyan = '#86e1fc'
+white = '#828bb8'
 
+# Bright colors
 [colors.bright]
-black = "#5d5d5d"
-red = "#dc5452"
-green = "#23d18b"
-yellow = "#f5f543"
-blue = "#3b8eea"
-magenta = "#d670d6"
-cyan = "#29b8db"
-white = "#e5e5e5"
-
-# Ghostty-specific settings without direct Alacritty equivalents:
-# font-thicken = true, font-thicken-strength = 100
-# background-blur = 200 (Alacritty supports only blur = true/false)
-# shell-integration-features = no-cursor
+black = '#444a73'
+red = '#ff8d94'
+green = '#c7fb6d'
+yellow = '#ffd8ab'
+blue = '#9ab8ff'
+magenta = '#caabff'
+cyan = '#b2ebff'
+white = '#c8d3f5'
