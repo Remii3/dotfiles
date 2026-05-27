@@ -1,1 +1,1 @@
-return { { "xiyaowong/transparent.nvim", enabled = false } }
+return { { "xiyaowong/transparent.nvim" } }

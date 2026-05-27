@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # Homebrew path: macOS Apple Silicon or Linuxbrew
 if command -v brew >/dev/null 2>&1; then
   eval "$(brew shellenv)"
@@ -13,6 +20,8 @@ plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 
 DISABLE_AUTO_TITLE="true"
 
+ZSH_THEME="powerlevel10k/powerlevel10k"
+
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
@@ -26,11 +35,11 @@ alias n=nvim
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
-if [[ -f ${BREW_PREFIX:-}/share/powerlevel10k/powerlevel10k.zsh-theme ]]; then
-  source "${BREW_PREFIX}/share/powerlevel10k/powerlevel10k.zsh-theme"
-elif [[ -f ~/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme ]]; then
-  source ~/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
-fi
+# if [[ -f ${BREW_PREFIX:-}/share/powerlevel10k/powerlevel10k.zsh-theme ]]; then
+#   source "${BREW_PREFIX}/share/powerlevel10k/powerlevel10k.zsh-theme"
+# elif [[ -f ~/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme ]]; then
+#   source ~/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
+# fi
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
