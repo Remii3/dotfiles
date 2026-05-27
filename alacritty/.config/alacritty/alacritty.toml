@@ -21,6 +21,13 @@ style = { shape = "Block", blinking = "Never" }
 [selection]
 save_to_clipboard = false
 
+[keyboard]
+
+bindings = [
+  { key = "C", mods = "Control|Shift", action = "Copy" },
+  { key = "V", mods = "Control|Shift", action = "Paste" },
+]
+
 # -----------------------------------------------------------------------------
 # TokyoNight Alacritty Colors
 # Theme: Tokyo Night Moon
