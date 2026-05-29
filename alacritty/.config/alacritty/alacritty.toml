@@ -13,7 +13,7 @@ bold = { family = "CaskaydiaMono Nerd Font", style = "Bold" }
 italic = { family = "CaskaydiaMono Nerd Font", style = "Italic" }
 bold_italic = { family = "CaskaydiaMono Nerd Font", style = "Bold Italic" }
 
-size = 16.0
+size = 15.0
 
 [cursor]
 style = { shape = "Block", blinking = "Never" }
@@ -28,13 +28,6 @@ bindings = [
   { key = "V", mods = "Control|Shift", action = "Paste" },
 ]
 
-# -----------------------------------------------------------------------------
-# TokyoNight Alacritty Colors
-# Theme: Tokyo Night Moon
-# Upstream: https://github.com/folke/tokyonight.nvim/raw/main/extras/alacritty/tokyonight_moon.toml
-# -----------------------------------------------------------------------------
-
-# Default colors
 [colors.primary]
 background = '#222436'
 foreground = '#c8d3f5'
