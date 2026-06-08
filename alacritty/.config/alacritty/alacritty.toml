@@ -10,8 +10,10 @@ normal = { family = "CaskaydiaMono Nerd Font", style = "Regular" }
 bold = { family = "CaskaydiaMono Nerd Font", style = "Bold" }
 italic = { family = "CaskaydiaMono Nerd Font", style = "Italic" }
 bold_italic = { family = "CaskaydiaMono Nerd Font", style = "Bold Italic" }
+size = 16.0
 
-size = 15.0
+[font.offset]
+y=4
 
 [cursor]
 style = { shape = "Block", blinking = "Never" }
