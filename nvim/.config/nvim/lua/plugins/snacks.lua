@@ -10,6 +10,12 @@ return {
         autoClose = true,
       },
       picker = {
+        sources = {
+          explorer = {
+            hidden = true,
+            ignored = true,
+          },
+        },
         actions = {
           toggle_preview_wrap = function(picker)
             local preview = picker.preview
