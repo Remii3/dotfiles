@@ -8,6 +8,8 @@ return {
         javascript = { "prettier" },
         javascriptreact = { "prettier" },
         css = { "prettier" },
+        sass = { "prettier" },
+        scss = { "prettier" },
         json = { "prettier" },
         vue = { "prettier" },
       },
