@@ -1,67 +1,53 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.config/zsh/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
+# Powerlevel10k instant prompt must stay near the top of this file.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Homebrew path: macOS Apple Silicon or Linuxbrew
-if command -v brew >/dev/null 2>&1; then
-  eval "$(brew shellenv)"
-fi
+# User-local commands.
+export PATH="$HOME/.local/bin:$PATH"
 
-# Path to your Oh My Zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
-
-[[ -f ~/dotfiles/zsh/.config/zsh/custom-web-search.zsh ]] \
-&& source ~/dotfiles/zsh/.config/zsh/custom-web-search.zsh
-
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
-
-DISABLE_AUTO_TITLE="true"
-
-ZSH_THEME="powerlevel10k/powerlevel10k"
-
-source $ZSH/oh-my-zsh.sh
-
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-export EDITOR='nvim'
-
-alias n=nvim
-
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-# if [[ -f ${BREW_PREFIX:-}/share/powerlevel10k/powerlevel10k.zsh-theme ]]; then
-#   source "${BREW_PREFIX}/share/powerlevel10k/powerlevel10k.zsh-theme"
-# elif [[ -f ~/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme ]]; then
-#   source ~/.oh-my-zsh/custom/themes/powerlevel10k/powerlevel10k.zsh-theme
-# fi
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
+# Activate mise after every other PATH modification so its tools take priority.
 if command -v mise >/dev/null 2>&1; then
+  if [[ -n "${MISE_SHELL:-}" ]]; then
+    eval "$(mise deactivate)"
+  fi
   eval "$(mise activate zsh)"
 fi
 
-# fzf
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="powerlevel10k/powerlevel10k"
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+DISABLE_AUTO_TITLE="true"
 
-# zoxide
-eval "$(zoxide init zsh)"
-cd() {
-  if [[ -z "$1" || -d "$1" ]]; then
-    builtin cd "$@"
-  else
-    z "$@"
-  fi
-}
-# eza/bat minimal aliases
-if command -v bat >/dev/null 2>&1; then alias cat="bat"; fi
+[[ -r "$ZDOTDIR/custom-web-search.zsh" ]] && source "$ZDOTDIR/custom-web-search.zsh"
+[[ -r "$ZSH/oh-my-zsh.sh" ]] && source "$ZSH/oh-my-zsh.sh"
+
+export EDITOR="nvim"
+
+# Machine-local secrets deliberately stay outside the dotfiles repository.
+[[ -r "$HOME/.config/private/zsh-secrets.zsh" ]] && source "$HOME/.config/private/zsh-secrets.zsh"
+
+alias n="nvim"
+
+if command -v fzf >/dev/null 2>&1; then
+  source <(fzf --zsh)
+fi
+
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+  cd() {
+    if [[ -z "$1" || -d "$1" ]]; then
+      builtin cd "$@"
+    else
+      z "$@"
+    fi
+  }
+fi
+
+if command -v bat >/dev/null 2>&1; then
+  alias cat="bat"
+fi
+
 if command -v eza >/dev/null 2>&1; then
   alias ls="eza --icons"
   alias la="eza -la --icons"
@@ -69,9 +55,5 @@ if command -v eza >/dev/null 2>&1; then
   alias lsa="eza -la --icons"
 fi
 
-# To customize prompt, run `p10k configure` or edit ~/.config/zsh/.p10k.zsh.
-[[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
-
-# To customize prompt, run `p10k configure` or edit ~/dotfiles/zsh/.config/zsh/.p10k.zsh.
-[[ ! -f ~/dotfiles/zsh/.config/zsh/.p10k.zsh ]] || source ~/dotfiles/zsh/.config/zsh/.p10k.zsh
-eval "$(~/.local/bin/mise activate zsh)"
+# Load the prompt configuration once, from the XDG Zsh directory.
+[[ -r "$ZDOTDIR/.p10k.zsh" ]] && source "$ZDOTDIR/.p10k.zsh"

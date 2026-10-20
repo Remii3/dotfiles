@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+set -u
+shopt -s nullglob
+
+internal_output="eDP-1"
+last_layout=""
+
+external_monitor_connected() {
+    local status connector output
+
+    for status in /sys/class/drm/card*-*/status; do
+        connector="${status%/status}"
+        connector="${connector##*/}"
+        output="${connector#*-}"
+
+        if [[ "$output" != "$internal_output" ]] &&
+           [[ "$(<"$status")" == "connected" ]]; then
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+while true; do
+    if external_monitor_connected; then
+        if [[ "$last_layout" != "external-only" ]]; then
+            if niri msg output "$internal_output" off >/dev/null; then
+                last_layout="external-only"
+            fi
+        fi
+    else
+        if [[ "$last_layout" != "internal-only" ]]; then
+            if niri msg output "$internal_output" on >/dev/null; then
+                last_layout="internal-only"
+            fi
+        fi
+    fi
+
+    sleep 1
+done

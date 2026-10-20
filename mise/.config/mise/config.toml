@@ -1,5 +1,17 @@
+[settings]
+idiomatic_version_file_enable_tools = ["node"]
+
 [tools]
+bat = "latest"
+deno = "latest"
+eza = "latest"
 fd = "latest"
+fzf = "latest"
 gh = "latest"
 lazygit = "latest"
 node = "latest"
+pnpm = "latest"
+ripgrep = "latest"
+supabase = "latest"
+zoxide = "latest"
+"npm:@openai/codex" = "latest"
