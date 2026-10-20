@@ -6,6 +6,46 @@
 --
 -- Or remove existing autocmds by their group name (which is prefixed with `lazyvim_` for the defaults)
 -- e.g. vim.api.nvim_del_augroup_by_name("lazyvim_wrap_spell")
+
+vim.filetype.add({
+  filename = {
+    [".env"] = "dotenv",
+  },
+  pattern = {
+    ["%.env%.[%w_.-]+"] = "dotenv",
+  },
+})
+
+vim.treesitter.language.register("bash", "dotenv")
+
+local function configure_dotenv_buffer(buf)
+  local filename = vim.fs.basename(vim.api.nvim_buf_get_name(buf))
+  if not filename:match("^%.env[%w_.-]*$") then
+    return
+  end
+
+  vim.bo[buf].filetype = "dotenv"
+  vim.bo[buf].commentstring = "# %s"
+
+  for _, client in ipairs(vim.lsp.get_clients({ bufnr = buf, name = "bashls" })) do
+    vim.lsp.buf_detach_client(buf, client.id)
+  end
+  vim.diagnostic.reset(nil, buf)
+end
+
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
+  pattern = { ".env", ".env.*" },
+  callback = function(event)
+    configure_dotenv_buffer(event.buf)
+  end,
+})
+
+for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+  if vim.api.nvim_buf_is_loaded(buf) then
+    configure_dotenv_buffer(buf)
+  end
+end
+
 vim.api.nvim_create_autocmd("QuitPre", {
   callback = function()
     local snacks_windows = {}

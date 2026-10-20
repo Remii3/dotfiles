@@ -1,0 +1,5 @@
+[tools]
+fd = "latest"
+gh = "latest"
+lazygit = "latest"
+node = "latest"
