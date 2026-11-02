@@ -19,6 +19,10 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 DISABLE_AUTO_TITLE="true"
 
+# Keep generated completion metadata out of the dotfiles repository.
+export ZSH_COMPDUMP="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-${ZSH_VERSION}"
+mkdir -p "${ZSH_COMPDUMP:h}"
+
 [[ -r "$ZDOTDIR/custom-web-search.zsh" ]] && source "$ZDOTDIR/custom-web-search.zsh"
 [[ -r "$ZSH/oh-my-zsh.sh" ]] && source "$ZSH/oh-my-zsh.sh"
 

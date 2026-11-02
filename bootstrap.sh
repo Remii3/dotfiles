@@ -95,6 +95,13 @@ sudo apt-get install -y "${system_packages[@]}"
 # The Niri package recommends Alacritty; Kitty is installed explicitly instead.
 sudo apt-get install -y --no-install-recommends niri
 
+dotfile_packages=(dms kitty mise niri nvim tmux zsh)
+
+printf '==> Checking dotfile link conflicts\n'
+stow --dir="$repo_dir" --target="$HOME" --no-folding --restow \
+  --simulate "${dotfile_packages[@]}" \
+  || fail 'existing files conflict with the dotfiles; back them up before retrying'
+
 printf '==> Installing shell framework and plugins\n'
 clone_if_missing https://github.com/ohmyzsh/ohmyzsh.git "$HOME/.oh-my-zsh"
 clone_if_missing https://github.com/romkatv/powerlevel10k.git \
@@ -105,7 +112,8 @@ clone_if_missing https://github.com/zsh-users/zsh-syntax-highlighting.git \
   "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
 
 font_dir="$HOME/.local/share/fonts/JetBrainsMonoNerdFont"
-if ! find "$font_dir" -type f -name '*.ttf' -print -quit 2>/dev/null | grep -q .; then
+if ! find "$HOME/.local/share/fonts" -type f \
+    -iname 'JetBrainsMono*NerdFont*.ttf' -print -quit 2>/dev/null | grep -q .; then
   printf '==> Installing JetBrainsMono Nerd Font\n'
   font_archive="$(mktemp /tmp/JetBrainsMonoNerdFont.XXXXXX.tar.xz)"
   cleanup_paths+=("$font_archive")
@@ -136,13 +144,13 @@ printf '==> Linking dotfiles with Stow\n'
 mkdir -p "$HOME/.config/private" "$HOME/Pictures/Screenshots"
 chmod 700 "$HOME/.config/private"
 stow --dir="$repo_dir" --target="$HOME" --no-folding --restow \
-  dms kitty mise niri nvim tmux zsh
+  "${dotfile_packages[@]}"
 
 printf '==> Installing tools managed by mise\n'
 mise install --yes
 
 printf '==> Installing Neovim plugins\n'
-nvim --headless '+Lazy! sync' +qa
+nvim --headless '+Lazy! restore' +qa
 
 printf '==> Configuring the desktop session\n'
 sudo locale-gen en_US.UTF-8

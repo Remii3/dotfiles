@@ -2,9 +2,11 @@
   "cornerRadius": 12,
   "niriLayoutGapsOverride": -2,
   "niriLayoutBorderSize": 2,
+  "mouseAccelProfile": "flat",
   "keyboardLayouts": "pl",
   "clockFormat": "24h",
   "controlCenterShowMicPercent": true,
+  "showOccupiedWorkspacesOnly": true,
   "appIdSubstitutions": [],
   "cursorSettings": {
     "theme": "System Default",
