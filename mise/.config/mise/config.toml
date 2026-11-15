@@ -1,8 +1,12 @@
 [settings]
 idiomatic_version_file_enable_tools = ["node"]
 
+[settings.self_update]
+auto = true
+
 [tools]
 bat = "latest"
+codex = "latest"
 deno = "latest"
 eza = "latest"
 fd = "latest"
@@ -14,4 +18,3 @@ pnpm = "latest"
 ripgrep = "latest"
 supabase = "latest"
 zoxide = "latest"
-"npm:@openai/codex" = "latest"

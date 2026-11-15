@@ -34,140 +34,182 @@ clone_if_missing() {
     return
   fi
 
-  [[ ! -e "$destination" ]] || fail "$destination exists but is not a Git checkout"
+  [[ ! -e "$destination" ]] \
+    || fail "$destination exists but is not a Git checkout"
+
   git clone --depth=1 "$url" "$destination"
 }
 
 trap cleanup EXIT
 trap 'on_error $LINENO' ERR
 
-[[ ${EUID} -ne 0 ]] || fail 'run this script as your normal user, not as root'
-[[ -r /etc/os-release ]] || fail 'cannot identify the operating system'
+[[ ${EUID} -ne 0 ]] \
+  || fail 'run this script as your normal user, not as root'
 
-# shellcheck source=/etc/os-release
+[[ -r /etc/os-release ]] \
+  || fail 'cannot identify the operating system'
+
+# shellcheck source=/dev/null
 source /etc/os-release
-[[ ${ID:-} == ubuntu ]] || fail 'this bootstrap supports Ubuntu only'
-dpkg --compare-versions "${VERSION_ID:-0}" ge 26.04 \
-  || fail 'Ubuntu 26.04 or newer is required for the stable Niri/DMS packages'
 
-command -v git >/dev/null 2>&1 || fail 'git is required to clone and run these dotfiles'
-[[ -d "$repo_dir/.git" ]] || fail 'run bootstrap.sh from a Git clone of the dotfiles repository'
+[[ ${ID:-} == ubuntu ]] \
+  || fail 'this bootstrap supports Ubuntu only'
 
-printf '==> Preparing Ubuntu repositories\n'
-sudo -v
-sudo apt-get update
-sudo apt-get install -y ca-certificates software-properties-common
-sudo add-apt-repository -y ppa:avengemedia/danklinux
-sudo add-apt-repository -y ppa:avengemedia/dms
-sudo add-apt-repository -y ppa:jdxcode/mise
-sudo apt-get update
+command -v git >/dev/null 2>&1 \
+  || fail 'git is required to run these dotfiles'
 
-printf '==> Installing system packages\n'
+[[ -d "$repo_dir/.git" ]] \
+  || fail 'run bootstrap.sh from a Git clone'
+
+export PATH="$HOME/.local/bin:$PATH"
+# Run against the global dotfiles config, regardless of the caller's directory.
+cd "$HOME"
+
+dotfile_packages=(kitty mise nvim tmux zsh)
+
+check_links() {
+  stow --dir="$repo_dir" --target="$HOME" --no-folding --restow \
+    --simulate "${dotfile_packages[@]}" \
+    || fail 'existing files conflict with dotfiles; back them up and merge their settings first'
+}
+
+# Catch conflicts before installing anything when Stow is already available.
+if command -v stow >/dev/null 2>&1; then
+  check_links
+fi
+
 system_packages=(
   bc
   build-essential
   ca-certificates
   curl
-  dms
   fontconfig
   fonts-noto-color-emoji
-  fuzzel
-  gdm3
   git
-  gnome-keyring
   kitty
-  mise
   neovim
-  playerctl
   stow
   tmux
   unzip
-  wireplumber
   wl-clipboard
-  xdg-desktop-portal-gnome
-  xdg-desktop-portal-gtk
-  xwayland-satellite
   xz-utils
   zsh
 )
-sudo apt-get install -y "${system_packages[@]}"
 
-# The Niri package recommends Alacritty; Kitty is installed explicitly instead.
-sudo apt-get install -y --no-install-recommends niri
-
-dotfile_packages=(dms kitty mise niri nvim tmux zsh)
+printf '==> Checking development packages\n'
+missing_packages=()
+for package in "${system_packages[@]}"; do
+  if [[ "$(dpkg-query -W -f='${Status}' "$package" 2>/dev/null || true)" != 'install ok installed' ]]; then
+    missing_packages+=("$package")
+  fi
+done
+if (( ${#missing_packages[@]} )); then
+  sudo -v
+  sudo apt-get update
+  sudo apt-get install -y "${missing_packages[@]}"
+fi
 
 printf '==> Checking dotfile link conflicts\n'
-stow --dir="$repo_dir" --target="$HOME" --no-folding --restow \
-  --simulate "${dotfile_packages[@]}" \
-  || fail 'existing files conflict with the dotfiles; back them up before retrying'
 
-printf '==> Installing shell framework and plugins\n'
-clone_if_missing https://github.com/ohmyzsh/ohmyzsh.git "$HOME/.oh-my-zsh"
-clone_if_missing https://github.com/romkatv/powerlevel10k.git \
+check_links
+
+printf '==> Checking mise\n'
+if ! command -v mise >/dev/null 2>&1; then
+  mise_installer="$(mktemp /tmp/mise-installer.XXXXXX.sh)"
+  cleanup_paths+=("$mise_installer")
+  curl -fsSL https://mise.run -o "$mise_installer"
+  sh "$mise_installer"
+fi
+mise --version
+
+printf '==> Installing Oh My Zsh and plugins\n'
+
+clone_if_missing \
+  https://github.com/ohmyzsh/ohmyzsh.git \
+  "$HOME/.oh-my-zsh"
+
+clone_if_missing \
+  https://github.com/romkatv/powerlevel10k.git \
   "$HOME/.oh-my-zsh/custom/themes/powerlevel10k"
-clone_if_missing https://github.com/zsh-users/zsh-autosuggestions \
+
+clone_if_missing \
+  https://github.com/zsh-users/zsh-autosuggestions \
   "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
-clone_if_missing https://github.com/zsh-users/zsh-syntax-highlighting.git \
+
+clone_if_missing \
+  https://github.com/zsh-users/zsh-syntax-highlighting.git \
   "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
 
+printf '==> Installing JetBrainsMono Nerd Font\n'
+
 font_dir="$HOME/.local/share/fonts/JetBrainsMonoNerdFont"
+
 if ! find "$HOME/.local/share/fonts" -type f \
-    -iname 'JetBrainsMono*NerdFont*.ttf' -print -quit 2>/dev/null | grep -q .; then
-  printf '==> Installing JetBrainsMono Nerd Font\n'
+    -iname 'JetBrainsMono*NerdFont*.ttf' \
+    -print -quit 2>/dev/null | grep -q .; then
+
   font_archive="$(mktemp /tmp/JetBrainsMonoNerdFont.XXXXXX.tar.xz)"
   cleanup_paths+=("$font_archive")
+
   mkdir -p "$font_dir"
+
   curl -fL \
     https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.tar.xz \
     -o "$font_archive"
+
   tar -xJf "$font_archive" -C "$font_dir"
   fc-cache -f "$font_dir"
 fi
 
 printf '==> Initializing Git submodules\n'
+
 git -C "$repo_dir" submodule update --init --recursive
 
-# Generate DMS-owned Niri fragments in an isolated home. Only the fragments are
-# copied; the main Niri config, Kitty config and monitor choices stay separate.
-if [[ ! -f "$HOME/.config/niri/dms/input.kdl" ]]; then
-  printf '==> Generating local DMS integration for Niri\n'
-  dms_temp="$(mktemp -d /tmp/dms-bootstrap.XXXXXX)"
-  cleanup_paths+=("$dms_temp")
-  env HOME="$dms_temp" XDG_CONFIG_HOME="$dms_temp/.config" \
-    dms setup headless --compositor niri --terminal kitty --no-systemd
-  mkdir -p "$HOME/.config/niri/dms"
-  cp -a "$dms_temp/.config/niri/dms/." "$HOME/.config/niri/dms/"
-fi
-
 printf '==> Linking dotfiles with Stow\n'
-mkdir -p "$HOME/.config/private" "$HOME/Pictures/Screenshots"
+
+mkdir -p \
+  "$HOME/.config/private"
+
 chmod 700 "$HOME/.config/private"
-stow --dir="$repo_dir" --target="$HOME" --no-folding --restow \
+
+stow --dir="$repo_dir" \
+  --target="$HOME" \
+  --no-folding \
+  --restow \
   "${dotfile_packages[@]}"
 
 printf '==> Installing tools managed by mise\n'
 mise install --yes
 
 printf '==> Installing Neovim plugins\n'
-nvim --headless '+Lazy! restore' +qa
 
-printf '==> Configuring the desktop session\n'
-sudo locale-gen en_US.UTF-8
-sudo update-locale LANG=en_US.UTF-8 LANGUAGE=en_US:en
-sudo chsh -s /usr/bin/zsh "$USER"
-sudo systemctl enable gdm3
+mise exec -- nvim --headless '+Lazy! restore' +qa
 
-if systemctl --user daemon-reload; then
-  systemctl --user add-wants niri.service dms.service \
-    || printf 'bootstrap: warning: run systemctl --user add-wants niri.service dms.service after login\n' >&2
-else
-  printf 'bootstrap: warning: user systemd is unavailable; connect dms.service after login\n' >&2
+printf '==> Configuring Zsh\n'
+
+if [[ "$(getent passwd "$USER" | cut -d: -f7)" != "/usr/bin/zsh" ]]; then
+  sudo chsh -s /usr/bin/zsh "$USER"
 fi
 
-printf '==> Validating configuration\n'
-niri validate -c "$HOME/.config/niri/config.kdl"
-mise doctor
+printf '==> Validating installed tools and Zsh integration\n'
+missing_tools="$(mise ls --current --missing)"
+[[ -z "$missing_tools" ]] \
+  || fail 'some configured mise tools are still missing'
+# Zsh expands this script, not Bash.
+# shellcheck disable=SC2016
+mise exec -- zsh -lic '
+  failed=0
+  for tool in mise bat codex deno eza fd fzf gh lazygit node pnpm rg supabase zoxide kitty nvim stow tmux wl-copy; do
+    if ! command -v "$tool" >/dev/null 2>&1; then
+      print -u2 -- "Missing command: $tool"
+      failed=1
+    fi
+  done
+  (( $+functions[z] && $+functions[cd] && $+functions[fzf-file-widget] )) || failed=1
+  [[ ${aliases[cat]} == bat && ${aliases[ls]} == "eza --icons" ]] || failed=1
+  exit $failed
+' || fail 'Zsh tools or integrations failed validation'
 
-printf '\nBootstrap complete. Log out or reboot, select Niri in GDM, then log in.\n'
-printf 'Machine-local secrets and account logins must be restored separately.\n'
+printf '\nBootstrap complete!\n'
+printf 'Open a new terminal to load the tools and Zsh integrations.\n'
+printf 'Machine-local secrets must be restored separately.\n'
